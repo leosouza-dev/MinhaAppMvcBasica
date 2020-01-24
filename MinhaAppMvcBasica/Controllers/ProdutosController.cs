@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using MinhaAppMvcBasica.Models;
 
 namespace MinhaAppMvcBasica.Controllers
 {
+    [Authorize]
     public class ProdutosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,6 +21,7 @@ namespace MinhaAppMvcBasica.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         // GET: Produtos
         public async Task<IActionResult> Index()
         {
@@ -48,7 +51,9 @@ namespace MinhaAppMvcBasica.Controllers
         // GET: Produtos/Create
         public IActionResult Create()
         {
-            ViewData["FornecedorId"] = new SelectList(_context.Fornecedores, "Id", "Nome");
+            //ViewData["FornecedorId"] = new SelectList(_context.Fornecedores, "Id", "Nome");
+            //TempData["FornecedorId"] = ...dura um request -> como uma session de curta de duração
+            ViewBag.FornecedorId = new SelectList(_context.Fornecedores, "Id", "Nome"); // Eduardo diz que ViewBag é mais elegante que ViewData
             return View();
         }
 
